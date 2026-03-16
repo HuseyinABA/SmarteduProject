@@ -3,7 +3,6 @@ const Category = require('../models/Category');
 const Course = require('../models/Course');
 const bcrypt = require('bcrypt');
 
-// CREATE NEW USER
 exports.createUser = async (req, res) => {
   try {
     await User.create(req.body);
@@ -13,7 +12,6 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// LOGIN USER
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -35,24 +33,35 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// LOGOUT USER
 exports.logoutUser = (req, res) => {
   req.session.destroy(() => {
     res.redirect('/');
   });
 };
 
-// GET DASHBOARD PAGE
+// GET DASHBOARD 
 exports.getDashboardPage = async (req, res) => {
-  // FETCH USER AND POPULATE ENROLLED COURSES FOR STUDENTS
   const user = await User.findOne({_id: req.session.userID}).populate('courses'); 
   const categories = await Category.find();
   const courses = await Course.find({user: req.session.userID}); 
+  const users = await User.find(); 
 
   res.status(200).render('dashboard', {
     page_name: 'dashboard',
     user,
     categories,
-    courses
+    courses,
+    users
   });
+};
+
+// DELETE USER FOR ADMIN 
+exports.deleteUser = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    await Course.deleteMany({user: req.params.id});
+    res.status(200).redirect('/users/dashboard');
+  } catch (error) {
+    res.status(400).json({ status: 'fail', error });
+  }
 };

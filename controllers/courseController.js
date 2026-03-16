@@ -9,7 +9,7 @@ exports.createCourse = async (req, res) => {
       name: req.body.name,
       description: req.body.description,
       category: req.body.category,
-      user: req.session.userID // TEACHER'S ID
+      user: req.session.userID
     });
     res.status(201).redirect('/users/dashboard'); 
   } catch (error) {
@@ -18,15 +18,30 @@ exports.createCourse = async (req, res) => {
   }
 };
 
-// GET ALL COURSES
+// GET ALL COURSES (SEARCH EKLENDİ)
 exports.getAllCourses = async (req, res) => {
   try {
     const categorySlug = req.query.categories;
-    const category = await Category.findOne({slug: categorySlug});
+    const query = req.query.search; // Arama çubuğundan gelen kelime
 
     let filter = {};
+
     if(categorySlug) {
+      const category = await Category.findOne({slug: categorySlug});
       filter = {category: category._id};
+    }
+
+    if(query) {
+      // İçinde aranan kelime geçenleri bul (büyük/küçük harf duyarsız)
+      filter = {name: { $regex: '.*' + query + '.*', $options: 'i' }};
+    }
+
+    if(categorySlug && query) {
+      const category = await Category.findOne({slug: categorySlug});
+      filter = {
+        name: { $regex: '.*' + query + '.*', $options: 'i' },
+        category: category._id
+      };
     }
 
     const courses = await Course.find(filter).sort('-createdAt');
@@ -45,14 +60,11 @@ exports.getAllCourses = async (req, res) => {
 // GET A SINGLE COURSE
 exports.getCourse = async (req, res) => {
   try {
-    // CHECK IF A USER IS LOGGED IN TO MANAGE ENROLL BUTTON VISIBILITY
     let user = null;
     if (req.session.userID) {
         user = await User.findById(req.session.userID);
     }
-    
     const course = await Course.findOne({slug: req.params.slug}).populate('user');
-
     res.status(200).render('course', {
       course,
       page_name: 'courses',
@@ -69,7 +81,6 @@ exports.enrollCourse = async (req, res) => {
     const user = await User.findById(req.session.userID);
     await user.courses.push({_id: req.body.course_id});
     await user.save();
-
     res.status(200).redirect('/users/dashboard');
   } catch (error) {
     res.status(400).json({ status: 'fail', error });
@@ -82,7 +93,16 @@ exports.releaseCourse = async (req, res) => {
     const user = await User.findById(req.session.userID);
     await user.courses.pull({_id: req.body.course_id});
     await user.save();
+    res.status(200).redirect('/users/dashboard');
+  } catch (error) {
+    res.status(400).json({ status: 'fail', error });
+  }
+};
 
+// DELETE COURSE FOR TEACHERS
+exports.deleteCourse = async (req, res) => {
+  try {
+    const course = await Course.findOneAndDelete({slug: req.params.slug});
     res.status(200).redirect('/users/dashboard');
   } catch (error) {
     res.status(400).json({ status: 'fail', error });
