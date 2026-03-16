@@ -1,13 +1,35 @@
 const Course = require('../models/Course');
 const Category = require('../models/Category');
 
-// Create a new course
 exports.createCourse = async (req, res) => {
   try {
     const course = await Course.create(req.body);
-    res.status(201).json({
-      status: 'success',
-      course,
+    res.status(201).redirect('/courses');
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      error,
+    });
+  }
+};
+
+exports.getAllCourses = async (req, res) => {
+  try {
+    const categorySlug = req.query.categories;
+    const category = await Category.findOne({slug:categorySlug})
+
+    let filter = {};
+    if(categorySlug) {
+      filter = {category:category._id}
+    }
+
+    const courses = await Course.find(filter).sort('-createdAt');
+    const categories = await Category.find();
+
+    res.status(200).render('courses', {
+      courses,
+      categories,
+      page_name: 'courses',
     });
   } catch (error) {
     res.status(400).json({
@@ -17,29 +39,13 @@ exports.createCourse = async (req, res) => {
   }
 };
 
-// Get all courses and categories
-exports.getAllCourses = async (req, res) => {
+// TEK BİR KURSU GETİRME (YENİ)
+exports.getCourse = async (req, res) => {
   try {
-    const categorySlug = req.query.categories;
-    const query = req.query.search;
-    
-    let category = null;
-    if (categorySlug) {
-      category = await Category.findOne({ slug: categorySlug });
-    }
+    const course = await Course.findOne({slug: req.params.slug})
 
-    let filter = {};
-    if (category) {
-      filter = { category: category._id };
-    }
-
-    // Fetch courses based on filter and all categories for the sidebar
-    const courses = await Course.find(filter).sort('-createdAt');
-    const categories = await Category.find();
-
-    res.status(200).render('courses', {
-      courses,
-      categories,
+    res.status(200).render('course', {
+      course,
       page_name: 'courses',
     });
   } catch (error) {

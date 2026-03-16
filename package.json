@@ -15,8 +15,11 @@
     "start": "nodemon app.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "connect-mongodb-session": "^5.0.0",
     "ejs": "^5.0.1",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "mongoose": "^9.3.0",
     "slugify": "^1.6.8"
   },

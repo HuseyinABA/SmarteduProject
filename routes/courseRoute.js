@@ -3,10 +3,8 @@ const courseController = require('../controllers/courseController');
 
 const router = express.Router();
 
-// GET request to list all courses
-router.route('/').get(courseController.getAllCourses);
-
-// POST request to create a course
 router.route('/').post(courseController.createCourse);
+router.route('/').get(courseController.getAllCourses);
+router.route('/:slug').get(courseController.getCourse); // Detay sayfası rotası
 
 module.exports = router;

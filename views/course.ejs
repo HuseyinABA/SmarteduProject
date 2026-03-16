@@ -1,0 +1,64 @@
+<%- include('partials/_header') %>
+<%- include('partials/_navigation') %>
+
+	<div class="all-title-box">
+		<div class="container text-center">
+			<h1><%= course.name %></h1>
+		</div>
+	</div>
+
+    <div id="overviews" class="section wb">
+        <div class="container">
+            <div class="row"> 
+                <div class="col-lg-9 blog-post-single">
+                    <div class="blog-item">
+						<div class="image-blog">
+							<img src="/images/blog_single.jpg" alt="" class="img-fluid">
+						</div>
+						<div class="post-content">
+							<div class="post-date">
+								<span class="day">30</span>
+								<span class="month">Dec</span>
+							</div>
+							<div class="meta-info-blog">
+								<span><i class="fa fa-calendar"></i> <a href="#">May 11, 2015</a> </span>
+							</div>
+							<div class="blog-title">
+								<h2><a href="#" title=""><%= course.name %></a></h2>
+							</div>
+							<div class="blog-desc">
+								<blockquote class="default">
+									<%= course.description %>
+								</blockquote>
+							</div>							
+						</div>
+					</div>
+					
+					<div class="blog-author">
+						<div class="author-bio">
+							<h3 class="author_name"><a href="#">Tom Cruise</a></h3>
+							<h5>CEO at <span>SmartEDU</span></h5>
+							<p class="author_det">
+								Loves teaching software engineering!
+							</p>
+						</div>
+					</div>
+                </div><div class="col-lg-3 col-12 right-single">
+					<div class="widget-search">
+						<div class="site-search-area">
+							<form method="get" id="site-searchform" action="#">
+								<div>
+									<input class="form-control" name="search" id="search-bar" placeholder="Search..." type="text">
+									<input id="searchsubmit" value="Search" type="submit">
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="widget-categories">
+						<h3 class="widget-title">Categories</h3>
+						<ul>
+							<li><a href="#">Web Design</a></li>
+							<li><a href="#">Graphic Design</a></li>
+						</ul>
+					</div>
+				</div></div></div></div><%- include('partials/_footer') %>
