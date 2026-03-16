@@ -14,13 +14,12 @@ const CategorySchema = new Schema({
   }
 });
 
-// Create slug from the name before saving
-CategorySchema.pre('validate', function(next){
+// Create slug from the name before saving (Updated for modern Mongoose)
+CategorySchema.pre('validate', function(){
   this.slug = slugify(this.name, {
     lower: true,
     strict: true
   });
-  next();
 });
 
 const Category = mongoose.model('Category', CategorySchema);

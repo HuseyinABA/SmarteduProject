@@ -22,17 +22,16 @@ const CourseSchema = new Schema({
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category' // Reference to the Category model
+    ref: 'Category'
   }
 });
 
-// Create slug from the name before saving
-CourseSchema.pre('validate', function(next){
+// Create slug from the name before saving (Updated for modern Mongoose)
+CourseSchema.pre('validate', function(){
   this.slug = slugify(this.name, {
     lower: true,
     strict: true
   });
-  next();
 });
 
 const Course = mongoose.model('Course', CourseSchema);
