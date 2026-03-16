@@ -12,7 +12,6 @@ app.use(express.static("public"));
 //ROUTES
 app.use('/', pageRoute);
 
-
 const port = 3000;
 
 app.listen(port, () => {
