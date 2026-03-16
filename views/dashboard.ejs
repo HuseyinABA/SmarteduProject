@@ -1,0 +1,34 @@
+<%- include('partials/_header') %>
+<%- include('partials/_navigation') %>
+
+<div class="all-title-box">
+    <div class="container text-center">
+        <h1><%= user.name %><span class="m_1"><%= user.role.toUpperCase() %> DASHBOARD</span></h1>
+    </div>
+</div>
+
+<div id="overviews" class="section wb">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Welcome to your Dashboard, <%= user.name %>!</h2>
+                <p class="lead">You are logged in as a <strong><%= user.role %></strong>.</p>
+                
+                <% if(user.role === 'student') { %>
+                    <div class="alert alert-info mt-4" role="alert">
+                        Burada yakında kayıt olduğun kurslar listelenecek!
+                    </div>
+                <% } %>
+
+                <% if(user.role === 'teacher') { %>
+                    <div class="alert alert-success mt-4" role="alert">
+                        Burada yakında oluşturduğun kurslar listelenecek ve yeni kurs ekleyebileceksin!
+                    </div>
+                <% } %>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/_footer') %>

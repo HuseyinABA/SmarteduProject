@@ -3,25 +3,24 @@ const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { 
+    type: String, 
+    enum: ["student", "teacher", "admin"], 
+    default: "student" 
   }
 });
 
-// Modern async/await approach WITHOUT 'next'
+// MODERN ASYNC YAPISI (next parametresi tamamen kaldırıldı)
 UserSchema.pre('save', async function() {
   const user = this;
-  const hash = await bcrypt.hash(user.password, 10);
+  
+  if (!user.isModified('password')) return;
+
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(user.password, salt);
   user.password = hash;
 });
 
