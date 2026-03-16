@@ -1,21 +1,20 @@
 const Course = require('../models/Course');
 const Category = require('../models/Category');
+const User = require('../models/User');
 
 // CREATE A NEW COURSE
 exports.createCourse = async (req, res) => {
   try {
-    const course = await Course.create({
+    await Course.create({
       name: req.body.name,
       description: req.body.description,
       category: req.body.category,
-      user: req.session.userID // Eğitmenin ID'si
+      user: req.session.userID // TEACHER'S ID
     });
-    // Her şey yolundaysa Dashboard'a geri dön
     res.status(201).redirect('/users/dashboard'); 
   } catch (error) {
-    // Ekranda o boş {} yerine gerçek hatayı yazdıralım
-    console.log("KURS EKLENİRKEN HATA:", error);
-    res.status(400).send('KURS EKLENEMEDİ! Lütfen kurs adının veritabanında daha önce kullanılmadığından emin ol. Hata detayı: ' + error.message);
+    console.log("ERROR CREATING COURSE:", error);
+    res.status(400).send('ERROR: Course name must be unique. ' + error.message);
   }
 };
 
@@ -23,11 +22,11 @@ exports.createCourse = async (req, res) => {
 exports.getAllCourses = async (req, res) => {
   try {
     const categorySlug = req.query.categories;
-    const category = await Category.findOne({slug: categorySlug})
+    const category = await Category.findOne({slug: categorySlug});
 
     let filter = {};
     if(categorySlug) {
-      filter = {category: category._id}
+      filter = {category: category._id};
     }
 
     const courses = await Course.find(filter).sort('-createdAt');
@@ -39,25 +38,53 @@ exports.getAllCourses = async (req, res) => {
       page_name: 'courses',
     });
   } catch (error) {
-    res.status(400).json({
-      status: 'fail',
-      error,
-    });
+    res.status(400).json({ status: 'fail', error });
   }
 };
 
 // GET A SINGLE COURSE
 exports.getCourse = async (req, res) => {
   try {
-    const course = await Course.findOne({slug: req.params.slug});
+    // CHECK IF A USER IS LOGGED IN TO MANAGE ENROLL BUTTON VISIBILITY
+    let user = null;
+    if (req.session.userID) {
+        user = await User.findById(req.session.userID);
+    }
+    
+    const course = await Course.findOne({slug: req.params.slug}).populate('user');
+
     res.status(200).render('course', {
       course,
       page_name: 'courses',
+      user
     });
   } catch (error) {
-    res.status(400).json({
-      status: 'fail',
-      error,
-    });
+    res.status(400).json({ status: 'fail', error });
+  }
+};
+
+// ENROLL A STUDENT IN A COURSE
+exports.enrollCourse = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.userID);
+    await user.courses.push({_id: req.body.course_id});
+    await user.save();
+
+    res.status(200).redirect('/users/dashboard');
+  } catch (error) {
+    res.status(400).json({ status: 'fail', error });
+  }
+};
+
+// RELEASE (DROP) A COURSE FOR A STUDENT
+exports.releaseCourse = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.userID);
+    await user.courses.pull({_id: req.body.course_id});
+    await user.save();
+
+    res.status(200).redirect('/users/dashboard');
+  } catch (error) {
+    res.status(400).json({ status: 'fail', error });
   }
 };

@@ -21,7 +21,7 @@
 								<span class="month">Dec</span>
 							</div>
 							<div class="meta-info-blog">
-								<span><i class="fa fa-calendar"></i> <a href="#">May 11, 2015</a> </span>
+								<span><i class="fa fa-calendar"></i> <a href="#">May 11, 2026</a> </span>
 							</div>
 							<div class="blog-title">
 								<h2><a href="#" title=""><%= course.name %></a></h2>
@@ -36,24 +36,38 @@
 					
 					<div class="blog-author">
 						<div class="author-bio">
-							<h3 class="author_name"><a href="#">Tom Cruise</a></h3>
-							<h5>CEO at <span>SmartEDU</span></h5>
+							<h3 class="author_name"><a href="#">SmartEDU Instructor</a></h3>
+							<h5>Teacher at <span>SmartEDU</span></h5>
 							<p class="author_det">
 								Loves teaching software engineering!
 							</p>
 						</div>
 					</div>
                 </div><div class="col-lg-3 col-12 right-single">
-					<div class="widget-search">
-						<div class="site-search-area">
-							<form method="get" id="site-searchform" action="#">
-								<div>
-									<input class="form-control" name="search" id="search-bar" placeholder="Search..." type="text">
-									<input id="searchsubmit" value="Search" type="submit">
-								</div>
-							</form>
-						</div>
-					</div>
+                    <% if (user && user.role === 'student') { %>
+                        <% 
+                            // Check if the student is already enrolled
+                            let isEnrolled = user.courses.some(c => c.toString() === course._id.toString());
+                        %>
+                        
+                        <% if (!isEnrolled) { %>
+                            <div class="widget-search">
+                                <div class="site-search-area">
+                                    <form method="POST" action="/courses/enroll">
+                                        <input type="hidden" name="course_id" value="<%= course._id %>">
+                                        <button class="btn btn-lg btn-warning text-white btn-block" style="font-weight: bold;"><span>ENROLL IN COURSE</span></button>
+                                    </form>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <div class="widget-search text-center">
+                                <div class="alert alert-success" role="alert">
+                                    You are enrolled in this course!
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } %>
+
 					<div class="widget-categories">
 						<h3 class="widget-title">Categories</h3>
 						<ul>

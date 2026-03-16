@@ -10,13 +10,17 @@ const UserSchema = new Schema({
     type: String, 
     enum: ["student", "teacher", "admin"], 
     default: "student" 
-  }
+  },
+  // ARRAY TO STORE ENROLLED COURSES FOR STUDENTS
+  courses: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course'
+  }]
 });
 
-// MODERN ASYNC YAPISI (next parametresi tamamen kaldırıldı)
+// MODERN ASYNC STRUCTURE: HASH PASSWORD BEFORE SAVING
 UserSchema.pre('save', async function() {
   const user = this;
-  
   if (!user.isModified('password')) return;
 
   const salt = await bcrypt.genSalt(10);

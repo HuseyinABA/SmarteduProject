@@ -42,11 +42,12 @@ exports.logoutUser = (req, res) => {
   });
 };
 
-// GET DASHBOARD PAGE (UPDATED TO FETCH CATEGORIES AND COURSES)
+// GET DASHBOARD PAGE
 exports.getDashboardPage = async (req, res) => {
-  const user = await User.findOne({_id: req.session.userID});
+  // FETCH USER AND POPULATE ENROLLED COURSES FOR STUDENTS
+  const user = await User.findOne({_id: req.session.userID}).populate('courses'); 
   const categories = await Category.find();
-  const courses = await Course.find({user: req.session.userID}); // ONLY FETCH THIS TEACHER'S COURSES
+  const courses = await Course.find({user: req.session.userID}); 
 
   res.status(200).render('dashboard', {
     page_name: 'dashboard',
