@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const session = require('express-session');
 const pageRoute = require('./routes/pageRoute');
 const courseRoute = require('./routes/courseRoute');
 const categoryRoute = require('./routes/categoryRoute');
 const userRoute = require('./routes/userRoute');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -27,17 +27,12 @@ global.userIN = null;
 app.use(express.static("public"));
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
-
-// SAFE SESSION
-app.use(session({
-  secret: 'my_keyboard_cat',
-  resave: false,
-  saveUninitialized: true
-}));
+app.use(cookieParser());
 
 // GLOBAL USER VARIABLE MIDDLEWARE
 app.use((req, res, next) => {
-  userIN = req.session.userID;
+
+  userIN = req.cookies ? req.cookies.jwt : null;
   next();
 });
 
