@@ -10,5 +10,6 @@ router.route('/logout').get(authController.logoutUser);
 router.route('/dashboard').get(authMiddleware, authController.getDashboardPage); 
 
 router.route('/:id/delete').post(authController.deleteUser);
+router.route('/:id/update').post(authController.updateUser);
 
 module.exports = router;

@@ -65,3 +65,18 @@ exports.deleteUser = async (req, res) => {
     res.status(400).json({ status: 'fail', error });
   }
 };
+
+exports.updateUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    user.email = req.body.email;
+    user.role = req.body.role;
+    await user.save();
+    res.status(200).redirect('/users/dashboard');
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      error,
+    });
+  }
+};

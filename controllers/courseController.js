@@ -18,11 +18,11 @@ exports.createCourse = async (req, res) => {
   }
 };
 
-// GET ALL COURSES (SEARCH EKLENDİ)
+// GET ALL COURSES
 exports.getAllCourses = async (req, res) => {
   try {
     const categorySlug = req.query.categories;
-    const query = req.query.search; // Arama çubuğundan gelen kelime
+    const query = req.query.search;
 
     let filter = {};
 
@@ -32,7 +32,7 @@ exports.getAllCourses = async (req, res) => {
     }
 
     if(query) {
-      // İçinde aranan kelime geçenleri bul (büyük/küçük harf duyarsız)
+    
       filter = {name: { $regex: '.*' + query + '.*', $options: 'i' }};
     }
 

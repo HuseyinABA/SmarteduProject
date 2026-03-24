@@ -1,6 +1,65 @@
 <%- include('partials/_header') %>
 <%- include('partials/_navigation') %>
 
+<style>
+
+    #overviews {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding-top: 60px;
+        padding-bottom: 60px;
+        min-height: 100vh;
+    }
+
+    .welcome-text {
+        color: #2c3e50 !important;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        text-shadow: none;
+    }
+
+    .dashboard-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background-color: #ffffff;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.12) !important;
+    }
+
+    .dashboard-card .card-header {
+        border-top-left-radius: 15px !important;
+        border-top-right-radius: 15px !important;
+        background: linear-gradient(to right, #1e3c72 0%, #2a5298 100%) !important;
+        border-bottom: none;
+        padding: 1.2rem 1.5rem;
+    }
+
+    .table th {
+        font-weight: 600;
+        color: #555;
+        border-top: none;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .table td {
+        vertical-align: middle;
+        color: #444;
+        padding: 1rem; 
+    }
+
+    .badge {
+        font-size: 80%;
+        padding: 0.5em 0.8em;
+        border-radius: 8px;
+    }
+</style>
+
 <div class="all-title-box">
     <div class="container text-center">
         <h1><%= user.name %><span class="m_1"><%= user.role.toUpperCase() %> DASHBOARD</span></h1>
@@ -11,26 +70,27 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h2>Welcome to your Dashboard, <%= user.name %>!</h2>
+                
+                <h2 class="mb-5 welcome-text">Welcome to your Dashboard, <span style="color: #2a5298;"><%= user.name %></span>!</h2>
                 
                 <% if(user.role === 'student') { %>
                     <div class="row mt-5 text-left">
                         <% for (let i=0; i < user.courses.length; i++) { %>
                             <div class="col-lg-6 col-md-6 col-12">
-                                <div class="course-item mb-5">
+                                <div class="course-item mb-5 dashboard-card">
                                     <div class="image-blog">
-                                        <img src="/images/blog_1.jpg" alt="" class="img-fluid">
+                                        <img src="/images/blog_1.jpg" alt="" class="img-fluid" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
                                     </div>
-                                    <div class="course-br">
+                                    <div class="course-br p-4">
                                         <div class="course-title">
-                                            <h2><a href="/courses/<%= user.courses[i].slug %>" title=""><%= user.courses[i].name %></a></h2>
+                                            <h2 class="mt-0"><a href="/courses/<%= user.courses[i].slug %>" title="" style="color: #2c3e50;"><%= user.courses[i].name %></a></h2>
                                         </div>
                                         <div class="course-desc">
-                                            <p><%= user.courses[i].description.substring(0, 100) + "..." %></p>
+                                            <p class="text-muted"><%= user.courses[i].description.substring(0, 100) + "..." %></p>
                                         </div>
-                                        <form method="POST" action="/courses/release" class="mt-3">
+                                        <form method="POST" action="/courses/release" class="mt-4">
                                             <input type="hidden" name="course_id" value="<%= user.courses[i]._id %>">
-                                            <button class="btn btn-lg btn-danger text-white"><span>RELEASE COURSE</span></button>
+                                            <button class="btn btn-danger text-white w-100 font-weight-bold" style="border-radius: 8px; padding: 12px;">RELEASE COURSE</button>
                                         </form>
                                     </div>
                                 </div>
@@ -40,27 +100,29 @@
                 <% } %>
 
                 <% if(user.role === 'teacher') { %>
-                    <div class="col-12 text-center mt-4">
-                        <button href="#" data-toggle="modal" data-target="#addCourse" class="btn btn-warning radius-0 mb-4" style="font-weight: bold; color: white;"><span>CREATE NEW COURSE</span></button>
+                    <div class="col-12 text-center mt-4 mb-5">
+                        <button href="#" data-toggle="modal" data-target="#addCourse" class="btn btn-warning btn-lg shadow" style="font-weight: bold; color: white; border-radius: 30px; padding: 15px 30px;">
+                            + CREATE NEW COURSE
+                        </button>
                     </div>
 
                     <div class="row mt-5 text-left">
                         <% for (let i=0; i < courses.length; i++) { %>
                             <div class="col-lg-6 col-md-6 col-12">
-                                <div class="course-item mb-5">
+                                <div class="course-item mb-5 dashboard-card">
                                     <div class="image-blog">
-                                        <img src="/images/blog_1.jpg" alt="" class="img-fluid">
+                                        <img src="/images/blog_1.jpg" alt="" class="img-fluid" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
                                     </div>
-                                    <div class="course-br">
+                                    <div class="course-br p-4">
                                         <div class="course-title">
-                                            <h2><a href="/courses/<%= courses[i].slug %>" title=""><%= courses[i].name %></a></h2>
+                                            <h2 class="mt-0"><a href="/courses/<%= courses[i].slug %>" title="" style="color: #2c3e50;"><%= courses[i].name %></a></h2>
                                         </div>
                                         <div class="course-desc">
-                                            <p><%= courses[i].description.substring(0, 100) + "..." %></p>
+                                            <p class="text-muted"><%= courses[i].description.substring(0, 100) + "..." %></p>
                                         </div>
-                                        <div class="clearfix mt-3">
+                                        <div class="clearfix mt-4">
                                             <form method="POST" action="/courses/<%= courses[i].slug %>/delete" style="display:inline;">
-                                                <button class="btn btn-danger text-white" onclick="return confirm('ARE YOU SURE?')"><span>DELETE COURSE</span></button>
+                                                <button class="btn btn-danger text-white w-100 font-weight-bold" onclick="return confirm('ARE YOU SURE?')" style="border-radius: 8px; padding: 12px;">DELETE COURSE</button>
                                             </form>
                                         </div>
                                     </div>
@@ -71,34 +133,134 @@
                 <% } %>
 
                 <% if(user.role === 'admin') { %>
-                    <div class="row mt-5">
-                        <div class="col-lg-12">
-                            <h3 class="mb-4 text-left">Users List</h3>
-                            <table class="table text-left">
-                                <thead>
-                                    <tr>
-                                    <th scope="col">ID#</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Role</th>
-                                    <th scope="col">Delete</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% for (let i=0; i < users.length; i++) { %>
-                                    <tr>
-                                        <th scope="row"><%= users[i]._id %></th>
-                                        <td><%= users[i].email %></td>
-                                        <td><%= users[i].role %></td>
-                                        <td>
-                                            <form method="POST" action="/users/<%= users[i]._id %>/delete">
-                                                <button class="btn btn-danger text-white" onclick="return confirm('ARE YOU SURE?')"><span>DELETE</span></button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    <% } %>
-                                </tbody>
-                            </table>
+                    <div class="row mt-4">
+                        
+                        <div class="col-lg-12 col-md-12 mb-5">
+                            <div class="card dashboard-card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0 text-white" style="font-weight: 600; font-size: 1.1rem;">Users Management</h5>
+                                    <button class="btn btn-success btn-sm font-weight-bold text-white shadow-sm" data-toggle="modal" data-target="#addUserModal" style="border-radius: 20px; padding: 8px 20px;">
+                                        + ADD USER
+                                    </button>
+                                </div>
+                                <div class="card-body p-0 pt-2 pb-2">
+                                    <div class="table-responsive overflow-hidden">
+                                        <table class="table table-hover mb-0 text-left">
+                                            <thead>
+                                                <tr>
+                                                <th scope="col" class="pl-4">Email Address</th>
+                                                <th scope="col" class="text-center">Role</th>
+                                                <th scope="col" class="text-right pr-4">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% for (let i=0; i < users.length; i++) { %>
+                                                <tr>
+                                                    <td class="pl-4 font-weight-bold" title="<%= users[i].email %>">
+                                                        <%= users[i].email %>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <% if(users[i].role === 'admin') { %>
+                                                            <span class="badge badge-danger text-uppercase"><%= users[i].role %></span>
+                                                        <% } else if(users[i].role === 'teacher') { %>
+                                                            <span class="badge badge-warning text-uppercase text-white"><%= users[i].role %></span>
+                                                        <% } else { %>
+                                                            <span class="badge badge-info text-uppercase"><%= users[i].role %></span>
+                                                        <% } %>
+                                                    </td>
+                                                    <td class="text-right pr-4" style="white-space: nowrap;">
+                                                        <button class="btn btn-outline-primary btn-sm font-weight-bold mr-2" data-toggle="modal" data-target="#updateUser<%= users[i]._id %>" style="border-radius: 6px; padding: 6px 15px;">UPDATE</button>
+                                                        <form method="POST" action="/users/<%= users[i]._id %>/delete" style="display:inline;">
+                                                            <button class="btn btn-outline-danger btn-sm font-weight-bold" onclick="return confirm('ARE YOU SURE?')" style="border-radius: 6px; padding: 6px 15px;">DELETE</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+
+                                                <div class="modal fade" id="updateUser<%= users[i]._id %>" tabindex="-1" role="dialog">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content" style="border-radius: 15px; border: none;">
+                                                            <div class="modal-body p-5 text-left">
+                                                                <h4 class="text-center mb-4" style="color: #2c3e50; font-weight: 700;">UPDATE USER ROLE</h4>
+                                                                <form method="POST" action="/users/<%= users[i]._id %>/update">
+                                                                    <div class="form-group">
+                                                                        <label style="font-weight: 600; color: #555;">Email Address</label>
+                                                                        <input class="form-control" name="email" value="<%= users[i].email %>" type="email" required style="border-radius: 8px; background: #f8f9fa;">
+                                                                    </div>
+                                                                    <div class="form-group mt-3">
+                                                                        <label style="font-weight: 600; color: #555;">Select New Role</label>
+                                                                        <select class="form-control" name="role" style="border-radius: 8px; background: #f8f9fa;">
+                                                                            <option value="student" <%= users[i].role === 'student' ? 'selected' : '' %>>Student</option>
+                                                                            <option value="teacher" <%= users[i].role === 'teacher' ? 'selected' : '' %>>Teacher</option>
+                                                                            <option value="admin" <%= users[i].role === 'admin' ? 'selected' : '' %>>Admin</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <button type="submit" class="btn btn-primary btn-block mt-4" style="border-radius: 8px; padding: 12px; font-weight: bold; background: linear-gradient(to right, #1e3c72, #2a5298); border: none;">SAVE CHANGES</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="col-lg-12 col-md-12 mb-5">
+                            <div class="card dashboard-card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0 text-white" style="font-weight: 600; font-size: 1.1rem;">Categories Management</h5>
+                                    <button class="btn btn-success btn-sm font-weight-bold text-white shadow-sm" data-toggle="modal" data-target="#addCategory" style="border-radius: 20px; padding: 8px 20px;">
+                                        + ADD CATEGORY
+                                    </button>
+                                </div>
+                                <div class="card-body p-0 pt-2 pb-2">
+                                    <div class="table-responsive overflow-hidden">
+                                        <table class="table table-hover mb-0 text-left">
+                                            <thead>
+                                                <tr>
+                                                <th scope="col" class="pl-4">Category Name</th>
+                                                <th scope="col" class="text-right pr-4">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% for (let i=0; i < categories.length; i++) { %>
+                                                <tr>
+                                                    <td class="pl-4 font-weight-bold" style="font-size: 1.05rem; color: #333;"><%= categories[i].name %></td>
+                                                    <td class="text-right pr-4" style="white-space: nowrap;">
+                                                        <button class="btn btn-outline-primary btn-sm font-weight-bold mr-2" data-toggle="modal" data-target="#updateCategory<%= categories[i]._id %>" style="border-radius: 6px; padding: 6px 15px;">UPDATE</button>
+                                                        <form method="POST" action="/categories/<%= categories[i]._id %>/delete" style="display:inline;">
+                                                            <button class="btn btn-outline-danger btn-sm font-weight-bold" onclick="return confirm('ARE YOU SURE?')" style="border-radius: 6px; padding: 6px 15px;">DELETE</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+
+                                                <div class="modal fade" id="updateCategory<%= categories[i]._id %>" tabindex="-1" role="dialog">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content" style="border-radius: 15px; border: none;">
+                                                            <div class="modal-body p-5 text-left">
+                                                                <h4 class="text-center mb-4" style="color: #2c3e50; font-weight: 700;">UPDATE CATEGORY</h4>
+                                                                <form method="POST" action="/categories/<%= categories[i]._id %>/update">
+                                                                    <div class="form-group">
+                                                                        <label style="font-weight: 600; color: #555;">Category Name</label>
+                                                                        <input class="form-control" name="name" value="<%= categories[i].name %>" type="text" required style="border-radius: 8px; background: #f8f9fa;">
+                                                                    </div>
+                                                                    <button type="submit" class="btn btn-primary btn-block mt-4" style="border-radius: 8px; padding: 12px; font-weight: bold; background: linear-gradient(to right, #1e3c72, #2a5298); border: none;">SAVE CHANGES</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 <% } %>
 
@@ -109,24 +271,72 @@
 
 <div class="modal fade" id="addCourse" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-body customer-box">
-                <h4 class="text-center">CREATE NEW COURSE</h4>
+        <div class="modal-content" style="border-radius: 15px; border: none;">
+            <div class="modal-body p-5">
+                <h4 class="text-center mb-4" style="color: #2c3e50; font-weight: 700;">CREATE NEW COURSE</h4>
                 <form method="POST" action="/courses">
                     <div class="form-group">
-                        <input class="form-control" name="name" placeholder="Course Name" type="text" required>
+                        <input class="form-control" name="name" placeholder="Course Name" type="text" required style="border-radius: 8px; background: #f8f9fa;">
                     </div>
-                    <div class="form-group">
-                        <select class="form-control" name="category" required>
+                    <div class="form-group mt-3">
+                        <select class="form-control" name="category" required style="border-radius: 8px; background: #f8f9fa;">
+                            <option value="" disabled selected>Select Category</option>
                             <% for (let i=0; i < categories.length; i++) { %>
                                 <option value="<%= categories[i]._id %>"><%= categories[i].name %></option>
                             <% } %>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <textarea class="form-control" name="description" placeholder="Course Description" rows="5" required></textarea>
+                    <div class="form-group mt-3">
+                        <textarea class="form-control" name="description" placeholder="Course Description" rows="5" required style="border-radius: 8px; background: #f8f9fa;"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-light btn-radius btn-brd grd1">SUBMIT COURSE</button>
+                    <button type="submit" class="btn btn-warning btn-block mt-4" style="border-radius: 8px; padding: 12px; font-weight: bold; color: white;">SUBMIT COURSE</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addCategory" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="border-radius: 15px; border: none;">
+            <div class="modal-body p-5">
+                <h4 class="text-center mb-4" style="color: #2c3e50; font-weight: 700;">CREATE NEW CATEGORY</h4>
+                <form method="POST" action="/categories">
+                    <div class="form-group">
+                        <label style="font-weight: 600; color: #555;">Category Name</label>
+                        <input class="form-control" name="name" placeholder="E.g. Web Development" type="text" required style="border-radius: 8px; background: #f8f9fa;">
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block mt-4" style="border-radius: 8px; padding: 12px; font-weight: bold;">SAVE CATEGORY</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="border-radius: 15px; border: none;">
+            <div class="modal-body p-5">
+                <h4 class="text-center mb-4" style="color: #2c3e50; font-weight: 700;">CREATE NEW USER</h4>
+                <form method="POST" action="/users/signup">
+                    <div class="form-group">
+                        <input class="form-control" name="name" placeholder="Full Name" type="text" required style="border-radius: 8px; background: #f8f9fa;">
+                    </div>
+                    <div class="form-group mt-3">
+                        <input class="form-control" name="email" placeholder="Email Address" type="email" required style="border-radius: 8px; background: #f8f9fa;">
+                    </div>
+                    <div class="form-group mt-3">
+                        <input class="form-control" name="password" placeholder="Password" type="password" required style="border-radius: 8px; background: #f8f9fa;">
+                    </div>
+                    <div class="form-group mt-3">
+                        <select class="form-control" name="role" required style="border-radius: 8px; background: #f8f9fa;">
+                            <option value="" disabled selected>Select Role</option>
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block mt-4" style="border-radius: 8px; padding: 12px; font-weight: bold;">CREATE USER</button>
                 </form>
             </div>
         </div>
